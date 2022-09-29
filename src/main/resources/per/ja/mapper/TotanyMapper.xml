@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.ja.mapper.TotanyMapper">
+    <resultMap id="UserResultMap" type="per.ja.pojo.Totany">
+    </resultMap>
+    <select id="selectByPageAndCondition" resultType="per.ja.pojo.Totany">
+        select *
+        from totany_info_table
+        <where>
+            <if test="totany.TotanyName!=null and totany.TotanyName!=''">
+                and TotanyName like '%${totany.TotanyName}%'
+                or AnotherName like '%${totany.TotanyName}%'
+            </if>
+            <if test="totany.TotancyContent!=null and totany.TotancyContent!=''">
+                and TotancyContent like '%${totany.TotancyContent}%'
+            </if>
+        </where>
+        limit #{begin},#{size};
+    </select>
+    <select id="selectTotalCountByPageAndCondition" resultType="java.lang.Integer">
+        select count(*)
+        from totany_info_table
+        <where>
+            <if test="totany.TotanyName!=null and totany.TotanyName!=''">
+                and TotanyName like '%${totany.TotanyName}%'
+                or AnotherName like '%${totany.TotanyName}%'
+            </if>
+            <if test="totany.TotancyContent!=null and totany.TotancyContent!=''">
+                and TotancyContent like '%${totany.TotancyContent}%'
+            </if>
+        </where>
+    </select>
+    <select id="selectByCascadeAndPage" resultType="per.ja.pojo.Totany">
+        select * from totany_info_table
+        where TotanyInfoID
+        in(select TotancyID
+        from column_totancy_relation
+        where TypeID in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>)
+        limit #{begin},#{size}
+
+    </select>
+    <select id="selectTotalCntByCascadeAndPage" resultType="java.lang.Integer">
+        select count(*) from totany_info_table
+        where TotanyInfoID
+        in(select TotancyID
+        from column_totancy_relation
+        where TypeID in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )
+    </select>
+
+</mapper>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>花卉网后台管理中心</title>
+    <style>
+        #userImg{
+            margin-right: 0;
+        }
+        li#user_nav {
+            float: right;
+            margin-right: 5%;
+        }
+        .el-row {
+            margin-bottom: 20px;
+        }
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: center;
+            line-height: 800px;
+
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 160px;
+        }
+
+        header.el-header {
+            padding: 0px;
+        }
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+        .el-form-item.el-form-item {
+            line-height: initial;
+        }
+        form.el-form.el-form--label-left.el-form--inline {
+            line-height: 70px;
+        }
+        tr.header-row {
+            line-height: 70px;
+        }
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+        .el-table .header-row{
+            height: 40px;
+            background: #8cc5ff;
+        }
+    </style>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<!--    <a href="/web04/selectAllUserServlet">查看所有用户</a>-->
+<div id="app">
+    <el-container>
+        <el-header>
+            <!--顶部导航栏 -->
+            <el-menu
+                    class="el-menu-demo"
+                    mode="horizontal"
+                    @select="top_handleSelect"
+                    background-color="#545c64"
+                    text-color="#fff"
+                    active-text-color="#ffd04b">
+                <el-menu-item index="1" disabled style="color:#FFFFFF">花卉网后台管理中心</el-menu-item>
+                <el-submenu index="2">
+                    <template slot="title">我的工作台</template>
+                    <el-menu-item index="2-1">选项1</el-menu-item>
+                    <el-menu-item index="2-2">选项2</el-menu-item>
+                    <el-menu-item index="2-3">选项3</el-menu-item>
+                    <el-submenu index="2-4">
+                        <template slot="title">选项4</template>
+                        <el-menu-item index="2-4-1">选项1</el-menu-item>
+                        <el-menu-item index="2-4-2">选项2</el-menu-item>
+                        <el-menu-item index="2-4-3">选项3</el-menu-item>
+                    </el-submenu>
+                </el-submenu>
+                <el-menu-item index="3" >消息中心</el-menu-item>
+                <el-menu-item index="4" id="user_nav">
+                    <label >{{adminName}}</label>
+                    <el-avatar ><i class="el-icon-user" id="userImg"></i></el-avatar>
+                </el-menu-item>
+            </el-menu>
+
+        </el-header>
+        <el-container>
+            <!--侧边导航栏-->
+            <el-aside width="200px">
+                <el-menu
+                        :default-active="activeIndex_aside"
+                        class="el-menu-vertical-demo"
+                        background-color="#545c64"
+                        text-color="#fff"
+                        active-text-color="#ffd04b">
+                    <el-menu-item index="1">
+                        <i class="el-icon-menu"></i>
+                        <span slot="title">管理员信息</span>
+                    </el-menu-item>
+                    <el-menu-item index="2">
+                        <i class="el-icon-s-custom"></i>
+                        <span slot="title">用户信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="3" >
+                        <i class="el-icon-coin"></i>
+                        <span slot="title">类型信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="4">
+                        <i class="el-icon-cherry"></i>
+                        <span slot="title">植物信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="5">
+                        <i class="el-icon-message"></i>
+                        <span slot="title">留言信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="6">
+                        <i class="el-icon-chat-square"></i>
+                        <span slot="title">帖子信息管理</span>
+                    </el-menu-item>
+                </el-menu>
+                </el-col>
+                </el-row>
+
+            </el-aside>
+            <el-main>
+                <el-row :span="24"></el-row><el-row :span="24"></el-row><el-row :span="24" ><h1>花卉网后台管理系统登陆</h1></el-row><el-row :span="24"></el-row>
+
+                <el-row type="flex" class="row-bg" justify="start">
+
+                    <el-col :span="7"></el-col>
+                        <el-col :span="10">
+                        <!--管理员登陆表单表单-->
+                        <el-form label-position="left" :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="100px" class="demo-ruleForm">
+                            <el-form-item label="管理员姓名" prop="adminName">
+                                <el-input v-model="loginForm.adminName" autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="管理员电话" prop="adminPhone">
+                                <el-input v-model="loginForm.adminPhone" autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="密码" prop="adminPWD">
+                                <el-input type="password" v-model="loginForm.adminPWD" autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="login()">登录</el-button>
+                                <el-button @click="reset()">重置</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                    <el-col :span="7"></el-col>
+                </el-row>
+
+                <el-row :span="24"></el-row><el-row :span="24"></el-row><el-row :span="24"></el-row><el-row :span="24"></el-row><el-row :span="24"></el-row><el-row :span="24"></el-row><el-row :span="24"></el-row><el-row :span="24"></el-row>
+            </el-main>
+        </el-container>
+    </el-container>
+
+</div>
+
+<script src="js/axios_0.27.2.js"></script>
+<script src="js/vue_2.7.10.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<!--<script src="js/vue.js"></script>-->
+<script>
+    new Vue({
+        el:"#app",
+        data(){
+            return {
+                activeIndex_aside:"1",
+                loginForm: {
+                    adminID:"",
+                    adminAccount:"",
+                    adminPhone:"",
+                    adminPWD:"",
+                    adminName:""
+                },
+                initLoginForm: {
+                    adminID:"",
+                    adminAccount:"",
+                    adminPhone:"",
+                    adminPWD:"",
+                    adminName:""
+                },
+                rules: {
+                    adminName: [
+                        {required: true, message: '请填写姓名', trigger: 'blur'},
+                        {max: 20, message: '不能超过20个字符', trigger: 'blur'}
+                    ],
+                    adminPWD: [
+                        {required: true, message: '请输入密码', trigger: 'blur'},
+                        {min: 6, message: '不能少于6个字符', trigger: 'blur'}
+                    ],
+                    adminPhone: [
+                        {required: true, message: '请输入电话号码', trigger: 'blur'},
+                        {min: 11,max:11, message: '电话号码格式错误', trigger: 'blur'}
+                    ]
+                }
+            };
+        },
+        methods:{
+            reset(){
+                this.loginForm=this.initLoginForm;
+            },
+            login(){
+                let _this=this;
+                axios({
+                    method:"post",
+                    url:"http://localhost:8080/web04/admin/login",
+                    data:this.loginForm
+                }).then((resp)=>{
+                    if(resp.data==="login success"){
+                        _this.$message({
+                            message:"LOGIN SUCCESS!",
+                            type:"success"
+                        })
+                        location.href="http://localhost:8080/web04/users.html";
+                    }else{
+                        _this.$message.error({
+                            message:resp.data,
+                        })
+                        //重置表单
+                        _this.reset();
+                    }
+                })
+            }
+        },
+        mounted(){
+            this.$message({
+                message:"欢迎登录花卉网后台管理中心!",
+                type:"success"
+            })
+        }
+    })
+</script>
+</body>
+</html>

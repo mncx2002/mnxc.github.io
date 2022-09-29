@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>花卉网后台管理中心</title>
+    <style>
+        #userImg{
+            margin-right: 0;
+        }
+        li#user_nav {
+            float: right;
+            margin-right: 5%;
+        }
+        .el-row {
+            margin-bottom: 20px;
+        }
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: center;
+            line-height: 800px;
+
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 160px;
+        }
+
+        header.el-header {
+            padding: 0px;
+        }
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+        .el-form-item.el-form-item {
+            line-height: initial;
+        }
+        form.el-form.el-form--label-left.el-form--inline {
+            line-height: 70px;
+        }
+        tr.header-row {
+            line-height: 70px;
+        }
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+        .el-table .header-row{
+            height: 40px;
+            background: #8cc5ff;
+        }
+    </style>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<!--    <a href="/web04/selectAllUserServlet">查看所有用户</a>-->
+<div id="app">
+    <el-container>
+        <el-header>
+            <!--顶部导航栏 -->
+            <el-menu
+                    :default-active="activeIndex_top"
+                    class="el-menu-demo"
+                    mode="horizontal"
+                    @select="top_handleSelect"
+                    background-color="#545c64"
+                    text-color="#fff"
+                    active-text-color="#ffd04b">
+                <el-menu-item index="1" disabled style="color:#FFFFFF">花卉网后台管理中心</el-menu-item>
+                <el-submenu index="2">
+                    <template slot="title">我的工作台</template>
+                    <el-menu-item index="2-1">选项1</el-menu-item>
+                    <el-menu-item index="2-2">选项2</el-menu-item>
+                    <el-menu-item index="2-3">选项3</el-menu-item>
+                    <el-submenu index="2-4">
+                        <template slot="title">选项4</template>
+                        <el-menu-item index="2-4-1">选项1</el-menu-item>
+                        <el-menu-item index="2-4-2">选项2</el-menu-item>
+                        <el-menu-item index="2-4-3">选项3</el-menu-item>
+                    </el-submenu>
+                </el-submenu>
+                <el-menu-item index="3" >消息中心</el-menu-item>
+                <el-menu-item index="4" id="user_nav">
+                    <label >{{adminName}}，欢迎您</label>
+                    <el-avatar ><i class="el-icon-user" id="userImg"></i></el-avatar>
+                </el-menu-item>
+            </el-menu>
+
+        </el-header>
+        <el-container>
+            <!--侧边导航栏-->
+            <el-aside width="200px">
+                <el-menu
+                        @select="aside_handleSelect"
+                        :default-active="activeIndex_aside"
+                        class="el-menu-vertical-demo"
+                        background-color="#545c64"
+                        text-color="#fff"
+                        active-text-color="#ffd04b">
+                    <el-menu-item index="1">
+                        <i class="el-icon-menu"></i>
+                        <span slot="title">管理员信息</span>
+                    </el-menu-item>
+                    <el-menu-item index="2">
+                        <i class="el-icon-s-custom"></i>
+                        <span slot="title">用户信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="3" >
+                        <i class="el-icon-coin"></i>
+                        <span slot="title">类型信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="4">
+                        <i class="el-icon-cherry"></i>
+                        <span slot="title">植物信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="5">
+                        <i class="el-icon-message"></i>
+                        <span slot="title">留言信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="6">
+                        <i class="el-icon-chat-square"></i>
+                        <span slot="title">帖子信息管理</span>
+                    </el-menu-item>
+                </el-menu>
+                </el-col>
+                </el-row>
+
+            </el-aside>
+            <el-main>
+                <el-row type="flex" class="row-bg" justify="start">
+                    <!--//表单-->
+                    <el-form :inline="true" :model="selectLunchInfo" label-position="left">
+                        <el-form-item label="发帖类型">
+                            <el-input v-model="selectLunchInfo.lunchType" placeholder="发帖类型"></el-input>
+                        </el-form-item>
+                        <el-form-item label="帖子类容">
+                            <el-input v-model="selectLunchInfo.lunchCont" placeholder="帖子类容"></el-input>
+                        </el-form-item>
+                        <el-form-item label="帖子标签">
+                            <el-input v-model="selectLunchInfo.lunchLabel" placeholder="帖子标签"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="selectByPageAndCondition">查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-row>
+                <!--//页面表格-->
+                <template>
+                    <el-table
+                            :data="tableData"
+                            style="width: 100%"
+                            :row-class-name="tableRowClassName"
+                            @selection-change="handleSelectionChange"
+                            header-row-class-name="header-row">
+                        <el-table-column
+                                type="index"
+                                align="center"
+                                width="50">
+                        </el-table-column>
+                        <el-table-column
+                                prop="lunchType"
+                                label="类型"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="lunchTIme"
+                                label="发帖时间"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="lunchCont"
+                                label="内容"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="lunchLabel"
+                                label="帖子标签"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="isVisible"
+                                label="可见状态"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                label="操作"
+                                align="center">
+                            <template slot-scope="scope">
+                            <el-button type="primary" @click="checkInfo(scope.row)">查看</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+                <!--分页工具条-->
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="page_sizes"
+                        :page-size="10"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="totalCnt">
+                </el-pagination>
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+<script src="js/axios_0.27.2.js"></script>
+<script src="js/vue_2.7.10.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<!--<script src="js/vue.js"></script>-->
+<script>
+    new Vue({
+        el:"#app",
+        data(){
+            return {
+                //用户名
+                adminName:"UserName，欢迎您",
+                //侧边导航栏
+                activeIndex_aside: '6',
+                //顶部导航栏
+                activeIndex_top: '2',
+                tableData: [],
+                multipleSelection:[],
+                selectLunchInfo:{
+                    LunchID:"",
+                    LunchType:"",
+                    LunchTIme:"",
+                    LunchCont:"",
+                    LunchLabel:"",
+                    UserID:"",
+                    isVisible:""
+                },
+                //对话框控制变量
+                dialogVisible:false,
+                innerVisible:false,
+                //添加用户表单对象模型
+                //当前页
+                totalCnt:100,
+                currentPage: 1,
+                page_sizes:[5,10,15,20],
+                page_size:10,
+            }
+        },
+        methods:{
+            getName(){
+                let _this = this;
+                axios({
+                    method: "get",
+                    url:"http://localhost:8080/web04/login/getAdminName"
+                }).then((resp)=>{
+                    _this.adminName=resp.data;
+                })
+            },
+            //查看回调方法
+            checkInfo(row){
+                console.log(row);
+            },
+            selectByPageAndCondition(){
+                let _this=this;
+                axios({
+                    method:"post",
+                    url:"http://localhost:8080/web04/lunch/selectByPageAndCondition?current_page="+this.currentPage+"&page_size="+this.page_size,
+                    data:this.selectLunchInfo
+                }).then((resp=>{
+                    _this.tableData = resp.data.data;
+                    _this.totalCnt = resp.data.totalCnt;
+                }))
+            },
+            //实现表格斑马条纹
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex %2=== 0) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            //复选框选中后执行的方法
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+
+            handleSizeChange(val) {
+                this.page_size=val;
+                // this.selectByPage();
+                this.selectByPageAndCondition();
+            },
+            handleCurrentChange(val) {
+                this.currentPage=val;
+                // this.selectByPage();
+                this.selectByPageAndCondition();
+            },
+            //侧边栏回调方法
+            aside_handleSelect(key, keyPath) {
+                switch(key){
+                    case "1":location.href="http://localhost:8080/web04/admins.html";
+                        break;
+                    case "2":location.href="http://localhost:8080/web04/users.html";
+                        break;
+                    case "3":location.href="http://localhost:8080/web04/columns.html";
+                        break;
+                    case "4":location.href="http://localhost:8080/web04/totanies.html";
+                        break;
+                    case "5":location.href="http://localhost:8080/web04/messages.html";
+                        break;
+                    case "6":location.href="http://localhost:8080/web04/lunches.html";
+                        break;
+                }
+            },
+            //顶部导航栏回调方法
+            top_handleSelect(key, keyPath) {
+
+            }
+        },
+        mounted(){
+
+            //获取用户表
+            // this.getAllUsers();
+            // this.selectByPage();
+            this.selectByPageAndCondition();
+            this.getName();
+
+        }
+    })
+</script>
+</body>
+</html>

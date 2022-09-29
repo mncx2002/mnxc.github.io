@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql:///cul_plants_db?useSSL=false&amp;characterEncoding=UTF-8&amp;useServerPrepStmts=true"/>
+                <property name="username" value="root"/>
+                <property name="password" value="jadmin"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!--加载sql的映射文件-->
+        <!--<mapper resource="per/ja/mapper/UserMapper.xml"/>-->
+        <!--Mapper代理开发-->
+        <!--<package name="/per/ja/mapper"/>-->
+        <package name="per.ja.mapper"/>
+    </mappers>
+</configuration>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.ja.mapper.UserMapper">
+    <resultMap id="UserResultMap" type="per.ja.pojo.User">
+
+    </resultMap>
+    <delete id="deleteByIds">
+        delete from user_info_table where UserID in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectById" resultMap="UserResultMap">
+        select * from user_info_table where UserID = #{id};
+    </select>
+
+    <select id="selectByUserPhoneAndUserPWD" resultType="per.ja.pojo.User">
+        select * from user_info_table where UserPhone= #{userphone} and UserPWD = #{password};
+    </select>
+    <select id="selectAll" resultType="per.ja.pojo.User">
+        select * from user_info_table;
+    </select>
+    <select id="selectCurrentPageDataAndCondition" resultType="per.ja.pojo.User">
+        select *
+        from user_info_table
+        <where>
+            <if test="user.NickName!=null and user.NickName!=''">
+                and NickName like '%${user.NickName}%'
+            </if>
+            <if test="user.UserPhone!=null and user.UserPhone!=''">
+                and UserPhone like '%${user.UserPhone}%'
+            </if>
+            <if test="user.IsActive!=null">
+                and IsActive = #{user.IsActive}
+            </if>
+        </where>
+        limit #{begin},#{page_size};
+    </select>
+    <select id="selectTotalCountAndCondition" resultType="java.lang.Integer">
+        select count(*)
+        from user_info_table
+        <where>
+            <if test="user.NickName!=null and user.NickName!=''">
+                and NickName like '%${user.NickName}%'
+            </if>
+            <if test="user.UserPhone!=null and user.UserPhone!=''">
+                and UserPhone like '%${user.UserPhone}%'
+            </if>
+            <if test="user.IsActive!=null and user.IsActive!=''" >
+                and IsActive = #{user.IsActive}
+            </if>
+        </where>
+    </select>
+</mapper>

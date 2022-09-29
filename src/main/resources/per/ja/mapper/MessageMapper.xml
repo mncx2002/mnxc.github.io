@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.ja.mapper.MessageMapper">
+    <resultMap id="UserResultMap" type="per.ja.pojo.Message">
+    </resultMap>
+    <select id="selectByPageAndCondition" resultType="per.ja.pojo.Message">
+        select *
+        from message
+        <where>
+            <if test="message.MsgCont!=null and message.MsgCont!=''">
+                MsgCont like '%${message.MsgCont}%'
+            </if>
+        </where>
+        limit #{begin},#{size};
+    </select>
+
+    <select id="selectTotalCountByPageAndCondition" resultType="java.lang.Integer">
+        select count(*)
+        from message
+        <where>
+            <if test="message.MsgCont!=null and message.MsgCont!=''">
+                MsgCont like '%${message.MsgCont}%'
+            </if>
+        </where>
+    </select>
+
+</mapper>

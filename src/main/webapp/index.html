@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>花卉网后台管理中心</title>
+    <style>
+        #userImg{
+            margin-right: 0;
+        }
+        li#user_nav {
+            float: right;
+            margin-right: 5%;
+        }
+        .el-row {
+            margin-bottom: 20px;
+        }
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: center;
+            line-height: 800px;
+
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 160px;
+        }
+
+        header.el-header {
+            padding: 0px;
+        }
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+        .el-form-item.el-form-item {
+            line-height: initial;
+        }
+        form.el-form.el-form--label-left.el-form--inline {
+            line-height: 70px;
+        }
+        tr.header-row {
+            line-height: 70px;
+        }
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+        .el-table .header-row{
+            height: 40px;
+            background: #8cc5ff;
+        }
+    </style>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<!--    <a href="/web04/selectAllUserServlet">查看所有用户</a>-->
+<div id="app">
+    <el-container>
+        <el-header>
+            <!--顶部导航栏 -->
+            <el-menu
+                    :default-active="activeIndex2"
+                    class="el-menu-demo"
+                    mode="horizontal"
+                    @select="handleSelect"
+                    background-color="#545c64"
+                    text-color="#fff"
+                    active-text-color="#ffd04b">
+                <el-menu-item index="1" disabled style="color:#FFFFFF">花卉网后台管理中心</el-menu-item>
+                <el-submenu index="2">
+                    <template slot="title">我的工作台</template>
+                    <el-menu-item index="2-1">选项1</el-menu-item>
+                    <el-menu-item index="2-2">选项2</el-menu-item>
+                    <el-menu-item index="2-3">选项3</el-menu-item>
+                    <el-submenu index="2-4">
+                        <template slot="title">选项4</template>
+                        <el-menu-item index="2-4-1">选项1</el-menu-item>
+                        <el-menu-item index="2-4-2">选项2</el-menu-item>
+                        <el-menu-item index="2-4-3">选项3</el-menu-item>
+                    </el-submenu>
+                </el-submenu>
+                <el-menu-item index="3" >消息中心</el-menu-item>
+                <el-menu-item index="4" id="user_nav">
+                    <label >{{adminName}}，欢迎您</label>
+                    <el-avatar ><i class="el-icon-user" id="userImg"></i></el-avatar>
+                </el-menu-item>
+            </el-menu>
+
+        </el-header>
+        <el-container>
+            <!--侧边导航栏-->
+            <el-aside width="200px">
+                <el-menu
+                        default-active="2"
+                        class="el-menu-vertical-demo"
+                        @select="aside_handleSelect"
+                        background-color="#545c64"
+                        text-color="#fff"
+                        active-text-color="#ffd04b">
+                    <el-menu-item index="1">
+                        <i class="el-icon-menu"></i>
+                        <span slot="title">管理员信息</span>
+                    </el-menu-item>
+                    <el-menu-item index="2">
+                        <i class="el-icon-s-custom"></i>
+                        <span slot="title">用户信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="3" >
+                        <i class="el-icon-coin"></i>
+                        <span slot="title">类型信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="4">
+                        <i class="el-icon-cherry"></i>
+                        <span slot="title">植物信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="5">
+                        <i class="el-icon-message"></i>
+                        <span slot="title">留言信息管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="6">
+                        <i class="el-icon-chat-square"></i>
+                        <span slot="title">帖子信息管理</span>
+                    </el-menu-item>
+                </el-menu>
+                </el-col>
+                </el-row>
+
+            </el-aside>
+            <el-main>
+                <el-row type="flex" class="row-bg" justify="start">
+                    <!--//表单-->
+                    <el-form :inline="true" :model="selectUserInfo" label-position="left">
+                        <el-form-item label="用户名">
+                            <el-input v-model="selectUserInfo.nickName" placeholder="用户名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="用户电话">
+                            <el-input v-model="selectUserInfo.userPhone" placeholder="用户电话"></el-input>
+                        </el-form-item>
+                        <el-form-item label="激活状态">
+                            <el-select v-model="selectUserInfo.isActive" placeholder="">
+                                <el-option label="已激活" value="1"></el-option>
+                                <el-option label="未激活" value="0"></el-option>
+                                <el-option label="" value=""></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="selectByPageAndCondition">查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-row>
+                <template>
+                    <el-row type="flex">
+                        <!--批量删除，新增-->
+                        <el-button type="danger" plain @click= "deleteByIds" >批量删除</el-button>
+                        <el-button type="primary" plain @click="dialogVisible = true">新增</el-button>
+                    </el-row>
+                </template>
+                <!--添加用户对话框表单-->
+                <el-dialog
+                        title="添加用户"
+                        :visible.sync="dialogVisible"
+                        width="30%">
+                    <el-form :model="addUserInfo">
+                        <el-form-item label="用户名称">
+                            <el-input v-model="addUserInfo.nickName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="用户电话">
+                            <el-input v-model="addUserInfo.userPhone"></el-input>
+                        </el-form-item>
+                        <el-form-item label="用户年龄">
+                            <el-input v-model="addUserInfo.userAge"></el-input>
+                        </el-form-item>
+                        <el-form-item label="用户密码">
+                            <el-input v-model="addUserInfo.userPWD" type="password" show-password="ture"></el-input>
+                        </el-form-item>
+                        <el-form-item label="激活状态">
+                            <el-switch v-model="addUserInfo.isActive"
+                                       active-value="1"
+                                       inactive-value="0">
+                            </el-switch>
+                        </el-form-item>
+                    </el-form>
+                    <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="addUser()">立即添加</el-button>
+                    </span>
+                    <!--内层对话框-->
+                    <el-dialog
+                            width="30%"
+                            :title="add_user_msg"
+                            :visible.sync="innerVisible"
+                            append-to-body>
+                        <span slot="footer" class="dialog-footer">
+                        <el-button type="primary" @click="innerVisible=false">确定</el-button>
+                        </span>
+                    </el-dialog>
+                </el-dialog>
+                <!--//页面表格-->
+                <template>
+                    <el-table
+                            :data="tableData"
+                            style="width: 100%"
+                            :row-class-name="tableRowClassName"
+                            @selection-change="handleSelectionChange"
+                            header-row-class-name="header-row">
+                        <el-table-column
+                                type="selection"
+                                width="55">
+                        </el-table-column>
+                        <el-table-column
+                                type="index"
+                                align="center"
+                                width="50">
+                        </el-table-column>
+                        <el-table-column
+                                prop="nickName"
+                                label="姓名"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="userPhone"
+                                label="电话"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="userAge"
+                                label="年龄"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="isActive"
+                                label="激活状态"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                label="操作"
+                                align="center">
+                            <template slot-scope="scope">
+                                <el-button type="primary" @click="updateUser(scope.row)">修改</el-button>
+                                <el-button type="danger" @click="deleteOne(scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+                <!--分页工具条-->
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="page_sizes"
+                        :page-size="10"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="totalCnt">
+                </el-pagination>
+            </el-main>
+        </el-container>
+    </el-container>
+    //修改用户信息对话框
+    <el-dialog
+            title="用户信息"
+            :visible.sync="updateUserIsVisible"
+            width="40%">
+        <el-form :model="updateUserInfo">
+            <el-form-item label="用户名称">
+                <el-input v-model="updateUserInfo.nickName"></el-input>
+            </el-form-item>
+            <el-form-item label="用户电话">
+                <el-input v-model="updateUserInfo.userPhone"></el-input>
+            </el-form-item>
+            <el-form-item label="用户年龄">
+                <el-input v-model="updateUserInfo.userAge"></el-input>
+            </el-form-item>
+            <el-form-item label="激活状态">
+                <el-switch v-model="updateUserInfo.isActive"
+                           :active-value="1"
+                           :inactive-value="0">
+                </el-switch>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+    <el-button @click="updateUserIsVisible = false">取 消</el-button>
+    <el-button type="primary" @click="updateUserAction">确 定</el-button>
+  </span>
+    </el-dialog>
+</div>
+
+<script src="js/axios_0.27.2.js"></script>
+<script src="js/vue_2.7.10.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<!--<script src="js/vue.js"></script>-->
+<script>
+    new Vue({
+        el:"#app",
+        data(){
+            return {
+                //用户名
+                adminName:"UserName",
+                //侧边导航栏
+                activeIndex_aside: '2',
+                //顶部导航栏
+                activeIndex_top: '2',
+                tableData: [],
+                //被选中删除的用户id数组
+                selectedIds:[],
+                multipleSelection:[],
+                selectUserInfo:{
+                    isActive:"",
+                    nickName:"",
+                    userAccount:"",
+                    userAge:"",
+                    userID:"",
+                    userPWD:"",
+                    userPhone:""
+                },
+                //对话框控制变量
+                dialogVisible:false,
+                innerVisible:false,
+                //添加提示信息模型
+                add_user_msg:"",
+                //修改用户
+                updateUserInfo:{},
+                updateUserIsVisible:false,
+                //添加用户表单对象模型
+                addUserInfo:{
+                    isActive:"",
+                    nickName:"",
+                    userAccount:"",
+                    userAge:"",
+                    userID:"",
+                    userPWD:"",
+                    userPhone:""
+                },
+                //当前页
+                totalCnt:100,
+                currentPage: 1,
+                page_sizes:[5,10,15,20],
+                page_size:10,
+            }
+        },
+        methods:{
+            getName(){
+                let _this = this;
+                axios({
+                    method: "get",
+                    url:"http://localhost:8080/web04/login/getAdminName"
+                }).then((resp)=>{
+                    _this.adminName=resp.data;
+                })
+            },
+            selectByPage(){
+                let _this=this;
+                axios({
+                    method:"post",
+                    url:"http://localhost:8080/web04/user/selectByPage",
+                    data:[_this.currentPage,_this.page_size]
+                }).then((resp=>{
+                    _this.tableData = resp.data.data;
+                    _this.totalCnt = resp.data.totalCnt;
+                }))
+            },
+            selectByPageAndCondition(){
+                let _this=this;
+                axios({
+                    method:"post",
+                    url:"http://localhost:8080/web04/user/selectByPageAndCondition?current_page="+this.currentPage+"&page_size="+this.page_size,
+                    data:this.selectUserInfo
+                }).then((resp=>{
+                    _this.tableData = resp.data.data;
+                    _this.totalCnt = resp.data.totalCnt;
+                }))
+            },
+            addUserSuccess() {
+                this.$message({
+                    message: this.add_user_msg,
+                    type: 'success'
+                });
+            },
+
+            addUserWarning() {
+                this.$message({
+                    message: this.add_user_msg,
+                    type: 'warning'
+                });
+            },
+            updateUser(row){
+                this.updateUserInfo=row;
+                this.updateUserIsVisible=true;
+            },
+            updateUserAction(){
+                let _this=this;
+                axios({
+                    method:"post",
+                    url:"http://localhost:8080/web04/user/update",
+                    data:this.updateUserInfo
+                }).then((resp)=>{
+                    if(resp.data=="update user success"){
+                        _this.$message({
+                            message:"修改成功",
+                            type:'success'
+                        })
+                        //刷新表格
+                        this.selectByPageAndCondition();
+
+                    }else{
+                        _this.$message({
+                            message:"修改失败",
+                            type:'fault'
+                        })
+                    }
+                    _this.updateUserIsVisible=false;
+                })
+            },
+            deleteOne(row){
+                let _this= this;
+                this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+                    cancelButtonText: '取消',
+                    confirmButtonText: '确定',
+                    type: 'warning'
+                }).then(() => {
+
+                    axios({
+                        method:"post",
+                        url:"http://localhost:8080/web04/user/deleteByIds",
+                        data:[row.userID]
+                    }).then((resp)=>{
+                        if(resp.data==="delete_users_success"){
+                            _this.$message({
+                                message:"删除成功",
+                                type:'success'
+                            })
+                            //刷新表格
+                            _this.selectByPageAndCondition();
+                        }else{
+                            _this.$message({
+                                message:"删除失败",
+                                type:'fault'
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            deleteByIds(){
+                this.getSelectedIds();
+                let _this= this;
+                this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+
+                    axios({
+                        method:"post",
+                        url:"http://localhost:8080/web04/user/deleteByIds",
+                        data:_this.selectedIds
+                    }).then((resp)=>{
+                        if(resp.data==="delete_users_success"){
+                            _this.$message({
+                                message:"删除成功",
+                                type:'success'
+                            })
+                            //刷新表格
+                            _this.selectByPageAndCondition();
+                        }else{
+                            _this.$message({
+                                message:"删除失败",
+                                type:'fault'
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+
+            },
+            getSelectedIds(){
+                for(let i=0;i<this.multipleSelection.length;i++){
+                    this.selectedIds[i]=this.multipleSelection[i].userID;
+                }
+                console.log(this.selectedIds);
+                console.log(this.multipleSelection);
+            },
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex %2=== 0) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            //复选框选中后执行的方法
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            onSubmit() {
+                console.log(this.selectUserInfo);
+            },
+            addUser(){
+                let _this=this;
+                axios({
+                    method:"post",
+                    url:"http://localhost:8080/web04/user/add",
+                    data:_this.addUserInfo
+                }).then((resp)=>{
+                    //处理响应的数据
+                    _this.add_user_msg=resp.data;
+                    if(resp.data==="add_user_success"){
+                        //关掉对话框
+                        // _this.dialogVisible=false;
+                        _this.addUserSuccess();
+                    }else{
+                        _this.addUserWarning();
+                    }
+
+                    //刷新列表
+                    // _this.getAllUsers();
+                    // _this.selectByPage();
+                    this.selectByPageAndCondition();
+                })
+            },
+            getAllUsers(){
+                let _this=this;
+                axios({
+                    method:"get",
+                    url:"http://localhost:8080/web04/user/selectAll",
+
+                }).then((resp)=>{
+                    _this.tableData=resp.data;
+                })
+            },
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+                this.page_size=val;
+                // this.selectByPage();
+                this.selectByPageAndCondition();
+            },
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                this.currentPage=val;
+                // this.selectByPage();
+                this.selectByPageAndCondition();
+            },
+            //侧边栏回调方法
+            aside_handleSelect(key, keyPath) {
+                switch(key){
+                    case "1":location.href="http://localhost:8080/web04/admins.html";
+                        break;
+                    case "2":location.href="http://localhost:8080/web04/users.html";
+                        break;
+                    case "3":location.href="http://localhost:8080/web04/columns.html";
+                        break;
+                    case "4":location.href="http://localhost:8080/web04/totanies.html";
+                        break;
+                    case "5":location.href="http://localhost:8080/web04/messages.html";
+                        break;
+                    case "6":location.href="http://localhost:8080/web04/lunches.html";
+                        break;
+                }
+            },
+            //顶部导航栏回调方法
+            top_handleSelect(key, keyPath) {
+
+            }
+        },
+        mounted(){
+
+            //获取用户表
+            // this.getAllUsers();
+            // this.selectByPage();
+            this.selectByPageAndCondition();
+            this.getName();
+
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.ja.mapper.LunchMapper">
+    <resultMap id="UserResultMap" type="per.ja.pojo.Lunch">
+    </resultMap>
+    <select id="selectByPageAndCondition" resultType="per.ja.pojo.Lunch">
+        select *
+        from lunch_info_table
+        <where>
+            <if test="lunch.LunchType!=null and lunch.LunchType!=''">
+                and LunchType like '%${lunch.LunchType}%'
+            </if>
+            <if test="lunch.LunchCont!=null and lunch.LunchCont!=''">
+                and LunchCont like '%${lunch.LunchCont}%'
+            </if>
+            <if test="lunch.LunchLabel!=null and lunch.LunchLabel!=''">
+                and LunchLabel like '%${lunch.LunchLabel}%'
+            </if>
+        </where>
+        limit #{begin},#{size};
+    </select>
+    <select id="selectTotalCountByPageAndCondition" resultType="java.lang.Integer">
+        select count(*)
+        from lunch_info_table
+        <where>
+            <if test="lunch.LunchType!=null and lunch.LunchType!=''">
+                and LunchType like '%${lunch.LunchType}%'
+            </if>
+            <if test="lunch.LunchCont!=null and lunch.LunchCont!=''">
+                and LunchCont like '%${lunch.LunchCont}%'
+            </if>
+            <if test="lunch.LunchLabel!=null and lunch.LunchLabel!=''">
+                and LunchLabel like '%${lunch.LunchLabel}%'
+            </if>
+        </where>
+    </select>
+
+</mapper>

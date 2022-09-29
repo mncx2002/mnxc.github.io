@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.ja.mapper.AdminMapper">
+    <resultMap id="UserResultMap" type="per.ja.pojo.Admin">
+    </resultMap>
+    <select id="selectByPageAndCondition" resultType="per.ja.pojo.Admin">
+        select *
+        from admin_info_table
+        <where>
+            <if test="admin.AdminName!=null and admin.AdminName!=''">
+                and AdminName like '%${admin.AdminName}%'
+            </if>
+            <if test="admin.AdminPhone!=null and admin.AdminPhone!=''">
+                and AdminPhone like '%${admin.AdminPhone}%'
+            </if>
+        </where>
+        limit #{begin},#{size};
+    </select>
+    <select id="selectTotalCountByPageAndCondition" resultType="java.lang.Integer">
+        select count(*)
+        from admin_info_table
+        <where>
+            <if test="admin.AdminName!=null and admin.AdminName!=''">
+                and AdminName like '%${admin.AdminName}%'
+            </if>
+            <if test="admin.AdminPhone!=null and admin.AdminPhone!=''">
+                and AdminPhone like '%${admin.AdminPhone}%'
+            </if>
+        </where>
+    </select>
+    <select id="login" resultType="per.ja.pojo.Admin">
+        select *
+        from admin_info_table
+        where AdminPhone = #{AdminPhone} and AdminPWD = #{AdminPWD}
+    </select>
+
+</mapper>

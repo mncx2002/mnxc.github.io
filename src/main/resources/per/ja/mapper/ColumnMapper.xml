@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.ja.mapper.ColumnMapper">
+    <resultMap id="ColumnResultMap" type="per.ja.pojo.Column">
+
+    </resultMap>
+    <select id="selectByPageAndCondition" resultType="per.ja.pojo.Column">
+        select *
+        from column_table
+        <where>
+            <if test="column.TypeName!=null and column.TypeName!=''">
+                TypeName like '%${column.TypeName}%'
+            </if>
+        </where>
+        limit #{begin},#{size};
+    </select>
+
+    <select id="selectTotalCountByPageAndCondition" resultType="java.lang.Integer">
+        select count(*)
+        from column_table
+        <where>
+            <if test="column.TypeName!=null and column.TypeName!=''">
+                and TypeName like '%${column.TypeName}%'
+            </if>
+        </where>
+    </select>
+    <select id="selectChildType" resultType="per.ja.pojo.Column">
+        select * from column_table
+        where
+        <if test="column.ColumnID==null">
+        PTypeID is null
+        </if>
+        <if test="column.ColumnID!=null">
+            PTypeID = #{column.ColumnID}
+        </if>
+
+
+    </select>
+    <select id="selectByIds" resultType="per.ja.pojo.Column">
+        select * from column_table
+        <where>
+            ColumnID in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+    <select id="selectTotancyIDs" resultType="java.lang.Integer">
+        select TotancyID from column_totancy_relation
+        where TypeID in
+        <foreach collection="columns" item="c" open="(" separator="," close=")" >
+            #{c.ColumnID}
+        </foreach>
+    </select>
+
+</mapper>
